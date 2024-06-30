@@ -10,6 +10,7 @@ from users.permissions import IsStaffOnly
 from users.serializer import *
 from users.smsc_api import send_sms
 from users.utils import generate_password
+from django.conf import settings
 
 
 class UserViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
@@ -34,8 +35,11 @@ class UserViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
             if user.is_superuser:
                 return Response({"success": "Успешно!"})
             else:
-                random_number = generate_password()
-                send_sms(phone_number, random_number)
+                if settings.USE_SMSC:
+                    random_number = generate_password()
+                    send_sms(phone_number, random_number)
+                else:
+                    random_number = "0000"
                 user.set_password(random_number)
                 user.save()
                 return Response({"success": "Успешно!"})

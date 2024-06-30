@@ -23,6 +23,8 @@ class LoginSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         numbers = "".join([str(i) for i in str(value) if i.isdigit()])
         if len(numbers) == 11:
+            if numbers.startswith("374"):
+                return numbers
             if numbers[0] == "7":
                 return numbers
             elif numbers[0] == "8":
@@ -31,9 +33,7 @@ class LoginSerializer(serializers.Serializer):
                 return serializers.ValidationError(
                     detail="Номер телефона введен неверно!"
                 )
-        elif len(numbers) == 12 and numbers.startswith("375"):
-            return numbers
-        elif len(numbers) == 12 and numbers.startswith("380"):
+        elif len(numbers) == 12 and numbers.startswith(("375", "380")):
             return numbers
         raise serializers.ValidationError(detail="Номер телефона введен неверно!")
 

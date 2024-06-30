@@ -139,7 +139,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
 }
-
+USE_SMSC = env("USE_SMSC", default=True)
 USERNAME_SMSC = env("USERNAME_SMSC", default="fake_user")
 PASSWORD_SMSC = env("PASSWORD_SMSC", default="fake_password")
 TOKEN_SMSC = env("TOKEN_SMSC", default="fake_token")
