@@ -2,11 +2,8 @@ from os.path import basename
 
 from django.db import models
 from django.db.models import constraints
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 
 from RateOnline.storage_backends import PrivateMediaStorage
-from integrations.telegram import TelegramIntegration
 from users.utils import optimize_image
 
 
@@ -433,23 +430,3 @@ class Result(models.Model):
 
     def __str__(self) -> str:
         return f"{self.score} --- {self.event_staff}"
-
-
-@receiver(post_save, sender=MemberNomination)
-def save_url(sender, instance, **kwargs):
-    if instance.url_video and not instance.url_message_video:
-        integration = TelegramIntegration()
-        integration.send_video_to_telegram_channel(instance)
-
-
-@receiver(post_delete, sender=MemberNominationPhoto)
-def delete_objects_of_member_nomination_photo(sender, instance, **kwargs):
-    if instance.photo:
-        PrivateMediaStorage().delete(instance.photo.name)
-    if instance.optimized_photo:
-        PrivateMediaStorage().delete(instance.optimized_photo.name)
-
-
-@receiver(post_save, sender=Result)
-def save_member_nominations(sender, instance, **kwargs):
-    instance.member_nomination.save()

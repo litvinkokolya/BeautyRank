@@ -9,7 +9,7 @@ from .models import *
 @admin.register(User)
 class CustomUserAdmin(ModelAdmin):
     add_form = UserCreateForm
-    list_display = ("last_name", "phone_number", "is_staff")
+    list_display = ("id", "last_name", "phone_number", "is_staff", "date_joined")
     list_display_links = ("last_name", "phone_number")
     search_fields = ("last_name", "phone_number")
     ordering = ["last_name"]
