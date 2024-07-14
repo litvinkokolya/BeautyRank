@@ -59,6 +59,7 @@ class MemberNominationInline(admin.TabularInline):
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["user"]
     inlines = [MemberNominationInline]
 
     def get_form(self, request, obj=None, **kwargs):
