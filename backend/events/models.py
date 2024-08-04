@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import constraints
 
 from RateOnline.storage_backends import PrivateMediaStorage
-from users.utils import optimize_image
+from events.tasks import optimize_image
 
 
 class Category(models.Model):
@@ -172,7 +172,11 @@ class Event(models.Model):
                 )
             top = sorted(top, reverse=True, key=lambda x: x["result_all"])
             win_nominations.append(
-                {"name": str(category_nomination.nomination), "members": top}
+                {
+                    "category": str(category_nomination.event_category.category),
+                    "name": str(category_nomination.nomination),
+                    "members": top,
+                }
             )
         return win_nominations
 
@@ -390,7 +394,7 @@ class MemberNominationPhoto(models.Model):
         if self.optimized_photo.name is None or basename(self.photo.name) != basename(
             self.optimized_photo.name
         ):
-            optimized_image = optimize_image(self.photo, max_size=100)
+            optimized_image = optimize_image.delay(self.photo, max_size=100)
             self.optimized_photo.save(optimized_image.name, optimized_image, save=False)
 
         super().save(*args, **kwargs)

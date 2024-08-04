@@ -172,14 +172,14 @@ class EventViewSet(
     def winners_nominations(self, request, *args, **kwargs):
         event = self.get_object()
         win_nominations = event.get_winners_nominations()
-        serializer = WinnersSerializer(win_nominations, many=True)
+        serializer = NominationWinnersSerializer(win_nominations, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"], permission_classes=[IsOwnerOnly])
     def winners_of_categories(self, request, *args, **kwargs):
         event = self.get_object()
         win_categories = event.get_winners_categories()
-        serializer = WinnersSerializer(win_categories, many=True)
+        serializer = CategoryWinnersSerializer(win_categories, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"], permission_classes=[AllowAny])

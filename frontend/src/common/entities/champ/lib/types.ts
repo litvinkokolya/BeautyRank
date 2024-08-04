@@ -27,7 +27,16 @@ export interface ChampCardProps {
   disableChamp: boolean;
 }
 
-export interface IChampNominationsCategories {
+export interface IChampNominationsWinners {
+  category: string;
+  name: string;
+  members: Array<{
+    member: string;
+    result_all: number;
+  }>;
+}
+
+export interface IChampCategoriesWinners {
   name: string;
   members: Array<{
     member: string;

@@ -144,7 +144,13 @@ class MemberNominationSerializerForWinners(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
-class WinnersSerializer(serializers.Serializer):
+class CategoryWinnersSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    members = MemberNominationSerializerForWinners(many=True)
+
+
+class NominationWinnersSerializer(serializers.Serializer):
+    category = serializers.CharField()
     name = serializers.CharField()
     members = MemberNominationSerializerForWinners(many=True)
 

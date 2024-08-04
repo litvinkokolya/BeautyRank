@@ -16,6 +16,9 @@ import { getUserIsOrganizer } from 'common/shared/constants';
 function ChampResultPage() {
   const champ = useAtomValue(champAtom);
   const [isClient, setIsClient] = useState(false);
+  const [openNominationsCategories, setOpenNominationsCategories] = useState<Record<number, boolean>>({});
+  const [openNominations, setOpenNominations] = useState<Record<number, boolean>>({});
+  const [openCategories, setOpenCategories] = useState<Record<number, boolean>>({});
   const USER_IS_ORGANIZER = getUserIsOrganizer();
 
   useEffect(() => {
@@ -46,6 +49,27 @@ function ChampResultPage() {
   const champWinnersNominations = champWinnersNominationsData?.data;
   const isLoading = isNominationsLoading || isCategoriesLoading;
 
+  const toggleNominationCategory = (index: number) => {
+    setOpenNominationsCategories((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const toggleNomination = (index: number) => {
+    setOpenNominations((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const toggleCategory = (index: number) => {
+    setOpenCategories((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   return (
     <Layout pageTitle={'Результаты чемпионата'}>
       {!isLoading && isClient ? (
@@ -57,47 +81,71 @@ function ChampResultPage() {
               </h1>
               {champWinnersNominations?.map((nomination, index) => (
                 <div key={index}>
-                  <h2 className={styles.nominations_categories__nomination}>
-                    {nomination.name}
+                  <h2
+                    className={`${styles.nominations_categories__nomination} ${openNominationsCategories[index] ? styles.active : ''}`}
+                    onClick={() => toggleNominationCategory(index)}
+                  >
+                    {nomination.category}
                   </h2>
-                  {nomination.members.map((member, index) => (
-                    <div key={index}>
+                  {openNominationsCategories[index] && (
+                    <div>
                       <h3
-                        className={styles.nominations_categories__member_name}
+                        className={`${styles.nominations_categories__nomination} ${openNominations[index] ? styles.active : ''}`}
+                        onClick={() => toggleNomination(index)}
                       >
-                        {member.member}
+                        {nomination.name}
                       </h3>
-                      <h3 className={styles.nominations_categories__result}>
-                        Результат: {member.result_all}{' '}
-                        {declineNumberOfBalls(member.result_all)}
-                      </h3>
+                      {openNominations[index] && (
+                        <div>
+                          {nomination.members.map((member, memberIndex) => (
+                            <div key={memberIndex}>
+                              <h4
+                                className={styles.nominations_categories__member_name}
+                              >
+                                {member.member}
+                              </h4>
+                              <h4 className={styles.nominations_categories__result}>
+                                Результат: {member.result_all}{' '}
+                                {declineNumberOfBalls(member.result_all)}
+                              </h4>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  )}
                 </div>
               ))}
             </li>
             <li className={styles.nominations_categories__item}>
               <h1 className={styles.nominations_categories__title}>
-                Победители Категорий
+                Победители Гран-при
               </h1>
-              {champWinnersCategories?.map((nomination, index) => (
+              {champWinnersCategories?.map((category, index) => (
                 <div key={index}>
-                  <h2 className={styles.nominations_categories__nomination}>
-                    {nomination.name}
+                  <h2
+                    className={`${styles.nominations_categories__nomination} ${openCategories[index] ? styles.active : ''}`}
+                    onClick={() => toggleCategory(index)}
+                  >
+                    {category.name}
                   </h2>
-                  {nomination.members.map((member, index) => (
-                    <div key={index}>
-                      <h3
-                        className={styles.nominations_categories__member_name}
-                      >
-                        {member.member}
-                      </h3>
-                      <h3 className={styles.nominations_categories__result}>
-                        Результат: {member.result_all}{' '}
-                        {declineNumberOfBalls(member.result_all)}
-                      </h3>
+                  {openCategories[index] && (
+                    <div>
+                      {category.members.map((member, memberIndex) => (
+                        <div key={memberIndex}>
+                          <h3
+                            className={styles.nominations_categories__member_name}
+                          >
+                            {member.member}
+                          </h3>
+                          <h3 className={styles.nominations_categories__result}>
+                            Результат: {member.result_all}{' '}
+                            {declineNumberOfBalls(member.result_all)}
+                          </h3>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               ))}
             </li>
