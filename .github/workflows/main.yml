@@ -24,4 +24,35 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd /app && docker compose -p diplom up --build -d
+        script: |
+          cd /app
+          cd backend
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
+          echo "USE_SMSC=False" >> .env
+          echo "USERNAME_SMSC=${{ secrets.USERNAME_SMSC }}" >> .env
+          echo "PASSWORD_SMSC=${{ secrets.PASSWORD_SMSC }}" >> .env
+          echo "TOKEN_SMSC=${{ secrets.TOKEN_SMSC }}" >> .env
+          echo "DEBUG=True" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env
+          echo "SECRET_KEY_TELEGRAM=${{ secrets.SECRET_KEY_TELEGRAM }}" >> .env
+          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> .env
+          echo "USE_S3=True" >> .env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }}" >> .env
+          echo "AWS_S3_REGION_NAME=${{ secrets.AWS_S3_REGION_NAME }}" >> .env
+          
+          cd ../frontend
+          echo "NEXT_PUBLIC_BASE_API_URL=${{ secrets.NEXT_PUBLIC_BASE_API_URL }}" > .env
+          echo "NEXT_PUBLIC_USER_AGREEMENT=${{ secrets.NEXT_PUBLIC_USER_AGREEMENT }}" >> .env
+          echo "NEXT_PUBLIC_BEAUTY_RANK_BOT=${{ secrets.NEXT_PUBLIC_BEAUTY_RANK_BOT }}" >> .env
+
+          
+          docker compose build
+          docker compose -p diplom up -d
+
+          docker builder prune -f
