@@ -24,4 +24,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: docker-compose -p diplom up --build -d
+        script: cd /app && docker compose -p diplom up --build -d
