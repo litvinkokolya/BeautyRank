@@ -1,10 +1,7 @@
-from os.path import basename
-
 from django.db import models
 from django.db.models import constraints
 
 from RateOnline.storage_backends import PrivateMediaStorage
-from events.tasks import optimize_image
 
 
 class Category(models.Model):
@@ -391,11 +388,16 @@ class MemberNominationPhoto(models.Model):
                     f"Максимум {photos_count_nomination} фотографии для данной MemberNomination."
                 )
 
-        if self.optimized_photo.name is None or basename(self.photo.name) != basename(
-            self.optimized_photo.name
-        ):
-            optimized_image = optimize_image.delay(self.photo, max_size=100)
-            self.optimized_photo.save(optimized_image.name, optimized_image, save=False)
+        # if self.optimized_photo.name is None or (
+        #         self.optimized_photo.name is not None and
+        #         splitext(basename(self.photo.name))[0] != splitext(basename(self.optimized_photo.name))[0]
+        # ):
+        #     # print(splitext(basename(self.photo.name))[0], splitext(basename(self.optimized_photo.name))[0])
+        #     # print(basename(self.photo.name), basename(self.optimized_photo.name))
+        #     optimize_image.delay(self.id)
+        # else:
+        #     print(splitext(basename(self.photo.name))[0], splitext(basename(self.optimized_photo.name))[0])
+        #     print(basename(self.photo.name), basename(self.optimized_photo.name))
 
         super().save(*args, **kwargs)
 

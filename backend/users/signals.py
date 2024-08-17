@@ -4,8 +4,8 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
 from RateOnline.storage_backends import PrivateMediaStorage
-from events.tasks import optimize_image
 from users.models import User
+from users.utils import optimizing_with_current_size_image
 
 
 @receiver(post_save, sender=User)
@@ -24,7 +24,7 @@ def make_image_optimized(sender, instance, **kwargs):
             )
 
         if is_have_image and (not is_have_optimized_image or equal_images is False):
-            optimized_image = optimize_image.delay(instance.image, 150)
+            optimized_image = optimizing_with_current_size_image(instance.image, 150)
             if not instance.optimized_image:
                 instance.optimized_image = optimized_image
             else:

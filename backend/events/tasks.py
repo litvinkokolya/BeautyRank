@@ -1,9 +1,6 @@
 from celery import shared_task
-from io import BytesIO
-from os.path import basename, splitext
-from django.core.files import File
-from PIL import Image, ImageOps
 from RateOnline.storage_backends import PrivateMediaStorage
+from users.utils import optimizing_with_current_size_image
 
 
 @shared_task
@@ -18,24 +15,19 @@ def delete_photo_task(url_1, url_2):
 
 
 @shared_task
-def optimize_image(source_image, max_size):
-    img = Image.open(source_image)
+def optimize_photo(member_nomination_photo_id):
+    from events.models import MemberNominationPhoto
 
-    img = ImageOps.exif_transpose(img)
+    member_nom_photo = MemberNominationPhoto.objects.get(id=member_nomination_photo_id)
+    source_image = PrivateMediaStorage().open(member_nom_photo.photo.name)
 
-    original_width, original_height = img.size
-    if original_width > original_height:
-        new_width = max_size
-        new_height = int((max_size / original_width) * original_height)
+    file = optimizing_with_current_size_image(source_image)
+
+    if not member_nom_photo.optimized_photo:
+        member_nom_photo.optimized_photo = file
     else:
-        new_height = max_size
-        new_width = int((max_size / original_height) * original_width)
+        member_nom_photo.optimized_photo.save(file.name, file, save=False)
 
-    img = img.resize((new_width, new_height))
-
-    buffer = BytesIO()
-    img.save(buffer, format="webp", quality=80, lossless=True)
-
-    buffer.seek(0)
-
-    return File(buffer, name=splitext(basename(source_image.name))[0] + ".webp")
+    member_nom_photo._disable_signal = True
+    member_nom_photo.save()
+    del member_nom_photo._disable_signal
