@@ -29,10 +29,12 @@ export interface ChampCardProps {
 
 export interface IChampNominationsWinners {
   category: string;
-  name: string;
-  members: Array<{
-    member: string;
-    result_all: number;
+  nominations: Array<{
+    nomination: string;
+    members:  Array<{
+      member: string;
+      result_all: number;
+    }>;
   }>;
 }
 

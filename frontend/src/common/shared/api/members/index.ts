@@ -1,14 +1,13 @@
-import { IMember } from 'common/entities/member';
+import {IMember, ResultsFromPaginator} from 'common/entities/member';
 import { ENDPOINTS } from '../endpoints';
 import { axiosInstanse } from '../instanse';
 import { AxiosPromise } from 'axios';
 import { IPhoto } from 'common/features/upload-member-photo/model';
 
-export const getMembers = (champId: number): AxiosPromise<IMember[]> =>
+export const getMembers = (champId: number, page: number, pageSize: number): AxiosPromise<ResultsFromPaginator> =>
   axiosInstanse.get(
     ENDPOINTS.MEMBERS.MEMBERS +
-      '?category_nomination__event_category__event=' +
-      champId
+      `?category_nomination__event_category__event=${champId}&page=${page}&page_size=${pageSize}`
   );
 
 export const getMember = (memberId: number): AxiosPromise<IMember> =>

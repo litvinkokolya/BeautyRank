@@ -149,10 +149,14 @@ class CategoryWinnersSerializer(serializers.Serializer):
     members = MemberNominationSerializerForWinners(many=True)
 
 
+class NominationsMembersSerializer(serializers.Serializer):
+    nomination = serializers.CharField()
+    members = MemberNominationSerializerForWinners(many=True)
+
+
 class NominationWinnersSerializer(serializers.Serializer):
     category = serializers.CharField()
-    name = serializers.CharField()
-    members = MemberNominationSerializerForWinners(many=True)
+    nominations = NominationsMembersSerializer(many=True)
 
 
 class NominationAttributesSerializer(serializers.ModelSerializer):

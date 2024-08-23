@@ -16,16 +16,18 @@ import { motion } from 'framer-motion';
 
 export const MembersList = () => {
   const [members, setMembers] = useState<IMember[]>();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const champ = useAtomValue(champAtom);
   const USER_IS_STAFF = getUserIsStaff();
   const USER_IS_ORGANIZER = getUserIsOrganizer();
   const user = useAtomValue(userAtom);
 
-  const { isLoading: isMembersLoading } = useQuery(
-    'membersList',
+  const { isLoading: isMembersLoading, data } = useQuery(
+    ['membersList', page, pageSize],
     async () => {
-      const { data } = await getMembers(champ?.id!);
-      setMembers(data);
+      const { data } = await getMembers(champ?.id!, page, pageSize);
+      setMembers(data.results);
       return data;
     },
     {
@@ -81,29 +83,44 @@ export const MembersList = () => {
     </ul>
   );
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage)
+  }
+
+  const totalPages = Math.ceil((data?.count || 0) / pageSize)
+
   return (
-    <>
-      {USER_IS_STAFF ? (
-        renderMemberCards(members!)
-      ) : (
-        <>
-          {!USER_IS_ORGANIZER && currentMasterMembers.length !== 0 && (
+      <>
+        {USER_IS_STAFF ? (
+            renderMemberCards(members!)
+        ) : (
             <>
-              <h3 className={styles.members__title}>Ваши работы:</h3>
-              {renderMemberCards(currentMasterMembers)}
+              {!USER_IS_ORGANIZER && currentMasterMembers.length !== 0 && (
+                  <>
+                    <h3 className={styles.members__title}>Ваши работы:</h3>
+                    {renderMemberCards(currentMasterMembers)}
+                  </>
+              )}
+              {!USER_IS_ORGANIZER && (
+                  <h3 className={styles.members__title}>Работы других мастеров:</h3>
+              )}
+              {otherMasterMembers.length !== 0 ? (
+                  renderMemberCards(otherMasterMembers)
+              ) : (
+                  <BeautyLoader/>
+              )}
             </>
-          )}
-          {!USER_IS_ORGANIZER && (
-            <h3 className={styles.members__title}>Работы других мастеров:</h3>
-          )}
-          {otherMasterMembers.length !== 0 ? (
-            renderMemberCards(otherMasterMembers)
-          ) : (
-            <BeautyLoader />
-          )}
-        </>
-      )}
-      <EvaluationModal />
-    </>
+        )}
+        <div className={styles.pagination}>
+          <button onClick={() => handlePageChange(page - 1)} disabled={!data?.previous}>
+            Назад
+          </button>
+          <span>Страница {page} из {totalPages}</span>
+          <button onClick={() => handlePageChange(page + 1)} disabled={!data?.next}>
+            Вперед
+          </button>
+        </div>
+        <EvaluationModal/>
+      </>
   );
 };

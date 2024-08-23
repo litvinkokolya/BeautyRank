@@ -142,37 +142,44 @@ class Event(models.Model):
         return {"name": self.name, "categories": categories}
 
     def get_winners_nominations(self):
+        nominations_members = []
         win_nominations = []
-        category_nominations = CategoryNomination.objects.filter(
-            event_category__event=self.id
-        )
-        for category_nomination in category_nominations:
-            member_nominations = MemberNomination.objects.filter(
-                category_nomination=category_nomination
-            )
-            members = set(member_nominations.values_list("member", flat=True))
-            top = []
-            members_in_current_event = Member.objects.filter(event=self.id)
-
-            for member in members:
-                result_all = sum(
-                    Result.objects.filter(
-                        member_nomination__member=member,
-                        member_nomination__category_nomination=category_nomination,
-                    ).values_list("score", flat=True)
+        categories = Category.objects.filter(categories_in_EventCategoryModel__event=self.id)
+        for category in categories:
+            category_nominations = CategoryNomination.objects.filter(
+                event_category__category=category)
+            for category_nomination in category_nominations:
+                member_nominations = MemberNomination.objects.filter(
+                    category_nomination=category_nomination
                 )
-                top.append(
+                members = set(member_nominations.values_list("member", flat=True))
+                top = []
+                members_in_current_event = Member.objects.filter(event=self.id)
+
+                for member in members:
+                    result_all = sum(
+                        Result.objects.filter(
+                            member_nomination__member=member,
+                            member_nomination__category_nomination=category_nomination,
+                        ).values_list("score", flat=True)
+                    )
+                    top.append(
+                        {
+                            "member": members_in_current_event.get(pk=member),
+                            "result_all": result_all,
+                        }
+                    )
+                top = sorted(top, reverse=True, key=lambda x: x["result_all"])
+                nominations_members.append(
                     {
-                        "member": members_in_current_event.get(pk=member),
-                        "result_all": result_all,
+                        "nomination": str(category_nomination.nomination),
+                        "members": top,
                     }
                 )
-            top = sorted(top, reverse=True, key=lambda x: x["result_all"])
             win_nominations.append(
                 {
-                    "category": str(category_nomination.event_category.category),
-                    "name": str(category_nomination.nomination),
-                    "members": top,
+                    'category': str(category.name),
+                    'nominations': nominations_members
                 }
             )
         return win_nominations

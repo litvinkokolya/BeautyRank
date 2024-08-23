@@ -26,6 +26,13 @@ export interface IMember {
   id_member: number;
 }
 
+export interface ResultsFromPaginator{
+  count: number,
+  next: string | null,
+  previous: string | null,
+  results: IMember[]
+}
+
 export interface MemberCardProps {
   member: IMember;
 }

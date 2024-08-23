@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from RateOnline import settings
+from events.paginator import MemberNominationsPaginator
 from events.permissions import (
     IsMemberOrReadOnly,
     IsStaffOrReadOnly,
@@ -33,6 +34,7 @@ class MemberNominationViewSet(
 
     queryset = MemberNomination.objects.all()
     serializer_class = MemberNominationSerializer
+    pagination_class = MemberNominationsPaginator
     filterset_fields = ["category_nomination__event_category__event", "is_done"]
     permission_classes = [TelegramBotUpdate]
 

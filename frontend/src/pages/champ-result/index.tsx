@@ -79,80 +79,85 @@ function ChampResultPage() {
               <h1 className={styles.nominations_categories__title}>
                 Победители Номинаций
               </h1>
-              {champWinnersNominations?.map((nomination, index) => (
-                <div key={index}>
-                  <h2
-                    className={`${styles.nominations_categories__nomination} ${openNominationsCategories[index] ? styles.active : ''}`}
-                    onClick={() => toggleNominationCategory(index)}
-                  >
-                    {nomination.category}
-                  </h2>
-                  {openNominationsCategories[index] && (
-                    <div>
-                      <h3
-                        className={`${styles.nominations_categories__nomination} ${openNominations[index] ? styles.active : ''}`}
-                        onClick={() => toggleNomination(index)}
-                      >
-                        {nomination.name}
-                      </h3>
-                      {openNominations[index] && (
+              {champWinnersNominations?.map((winners_nomination, categoryIndex) => (
+                  <div key={categoryIndex}>
+                    <h2
+                        className={`${styles.nominations_categories__category} ${openNominationsCategories[categoryIndex] ? styles.active : ''}`}
+                        onClick={() => toggleNominationCategory(categoryIndex)}
+                    >
+                      {winners_nomination.category}
+                    </h2>
+                    {openNominationsCategories[categoryIndex] && (
                         <div>
-                          {nomination.members.map((member, memberIndex) => (
-                            <div key={memberIndex}>
-                              <h4
-                                className={styles.nominations_categories__member_name}
-                              >
-                                {member.member}
-                              </h4>
-                              <h4 className={styles.nominations_categories__result}>
-                                Результат: {member.result_all}{' '}
-                                {declineNumberOfBalls(member.result_all)}
-                              </h4>
-                            </div>
+                          {winners_nomination.nominations?.map((nomination, nominationIndex) => (
+                              <div key={nominationIndex}>
+                                <h4
+                                    className={`${styles.nominations_categories__nomination} ${openNominations[nominationIndex] ? styles.active : ''}`}
+                                    onClick={() => toggleNomination(nominationIndex)}
+                                >
+                                  {nomination.nomination}
+                                </h4>
+                                {openNominations[nominationIndex] && (
+                                    <div>
+                                      {nomination.members.map((member, memberIndex) => (
+                                          <div key={memberIndex}>
+                                            <h4
+                                                className={styles.nominations_categories__member_name}
+                                            >
+                                              {member.member}
+                                            </h4>
+                                            <h4 className={styles.nominations_categories__result}>
+                                              Результат: {member.result_all}{' '}
+                                              {declineNumberOfBalls(member.result_all)}
+                                            </h4>
+                                          </div>
+                                      ))}
+                                    </div>
+                                )}
+                              </div>
                           ))}
                         </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
               ))}
             </li>
+
             <li className={styles.nominations_categories__item}>
               <h1 className={styles.nominations_categories__title}>
                 Победители Гран-при
               </h1>
               {champWinnersCategories?.map((category, index) => (
-                <div key={index}>
-                  <h2
-                    className={`${styles.nominations_categories__nomination} ${openCategories[index] ? styles.active : ''}`}
-                    onClick={() => toggleCategory(index)}
-                  >
-                    {category.name}
-                  </h2>
-                  {openCategories[index] && (
-                    <div>
-                      {category.members.map((member, memberIndex) => (
-                        <div key={memberIndex}>
-                          <h3
-                            className={styles.nominations_categories__member_name}
-                          >
-                            {member.member}
-                          </h3>
-                          <h3 className={styles.nominations_categories__result}>
-                            Результат: {member.result_all}{' '}
-                            {declineNumberOfBalls(member.result_all)}
-                          </h3>
+                  <div key={index}>
+                    <h2
+                        className={`${styles.nominations_categories__category} ${openCategories[index] ? styles.active : ''}`}
+                        onClick={() => toggleCategory(index)}
+                    >
+                      {category.name}
+                    </h2>
+                    {openCategories[index] && (
+                        <div>
+                          {category.members.map((member, memberIndex) => (
+                              <div key={memberIndex}>
+                                <h3
+                                    className={styles.nominations_categories__member_name}
+                                >
+                                  {member.member}
+                                </h3>
+                                <h3 className={styles.nominations_categories__result}>
+                                  Результат: {member.result_all}{' '}
+                                  {declineNumberOfBalls(member.result_all)}
+                                </h3>
+                              </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
               ))}
             </li>
           </ul>
         </>
       ) : (
-        <Loader fullPage />
+          <Loader fullPage/>
       )}
     </Layout>
   );
