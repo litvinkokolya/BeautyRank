@@ -1,4 +1,4 @@
-from django.db.models import BooleanField, Case, F, Q, When, Count
+from django.db.models import BooleanField, Case, F, Q, When, Count, Value, IntegerField, OuterRef, Subquery, Exists
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.mixins import (
@@ -47,20 +47,7 @@ class MemberNominationViewSet(
 
         if not self.request.data.get("user", "client") == "telegram":
             queryset = (
-                queryset.select_related(
-                    "member",
-                    "member__user",
-                    "category_nomination",
-                    "category_nomination__event_category",
-                    "category_nomination__event_category__event",
-                )
-                .prefetch_related(
-                    "results",
-                    "category_nomination__event_staff",
-                    "category_nomination__event_category__event__owners",
-                    "category_nomination__event_category__event__members",
-                    "category_nomination__event_category__event__members__user",
-                )
+                queryset
                 .filter(
                     Q(member__user=self.request.user)
                     | Q(category_nomination__event_staff=self.request.user)
@@ -71,9 +58,23 @@ class MemberNominationViewSet(
                         category_nomination__event_category__event__members__user=self.request.user,
                         is_done=True,
                     )
-                )
-                .distinct()
+                ).distinct()
             )
+
+            if self.request.user.id in queryset.values_list('category_nomination__event_staff', flat=True):
+                has_result = Subquery(Result.objects.filter(event_staff_id=self.request.user.id, member_nomination=OuterRef('pk')))
+                queryset = queryset.filter(photos__isnull=False).annotate(
+                    has_result=Exists(has_result)
+                ).order_by('has_result')
+
+            elif self.request.user.id in queryset.values_list('member__user', flat=True):
+                queryset = queryset.annotate(
+                    is_current_member=Case(
+                        When(member__user=self.request.user, then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField()
+                    )
+                ).order_by('-is_current_member')
 
             return queryset
         return super().get_queryset()

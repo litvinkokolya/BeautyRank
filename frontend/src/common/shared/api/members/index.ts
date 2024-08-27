@@ -4,10 +4,10 @@ import { axiosInstanse } from '../instanse';
 import { AxiosPromise } from 'axios';
 import { IPhoto } from 'common/features/upload-member-photo/model';
 
-export const getMembers = (champId: number, page: number, pageSize: number): AxiosPromise<ResultsFromPaginator> =>
+export const getMembers = (champId: number, page: number, pageSize: number, isDone: boolean): AxiosPromise<ResultsFromPaginator> =>
   axiosInstanse.get(
     ENDPOINTS.MEMBERS.MEMBERS +
-      `?category_nomination__event_category__event=${champId}&page=${page}&page_size=${pageSize}`
+      `?category_nomination__event_category__event=${champId}&page=${page}&page_size=${pageSize}&is_done=${isDone}`
   );
 
 export const getMember = (memberId: number): AxiosPromise<IMember> =>

@@ -18,15 +18,16 @@ export const MembersList = () => {
   const [members, setMembers] = useState<IMember[]>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+  const [isDone, setIsDone] = useState(false)
   const champ = useAtomValue(champAtom);
   const USER_IS_STAFF = getUserIsStaff();
   const USER_IS_ORGANIZER = getUserIsOrganizer();
   const user = useAtomValue(userAtom);
 
   const { isLoading: isMembersLoading, data } = useQuery(
-    ['membersList', page, pageSize],
+    ['membersList', page, pageSize, isDone],
     async () => {
-      const { data } = await getMembers(champ?.id!, page, pageSize);
+      const { data } = await getMembers(champ?.id!, page, pageSize, isDone);
       setMembers(data.results);
       return data;
     },
@@ -91,6 +92,10 @@ export const MembersList = () => {
 
   return (
       <>
+        <div>
+          <label htmlFor='is_done'>Завершенные</label>
+          <input type='checkbox' id='is_done' checked={isDone} onChange={() => setIsDone(!isDone)}/>
+        </div>
         {USER_IS_STAFF ? (
             renderMemberCards(members!)
         ) : (

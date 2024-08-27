@@ -142,12 +142,12 @@ class Event(models.Model):
         return {"name": self.name, "categories": categories}
 
     def get_winners_nominations(self):
-        nominations_members = []
         win_nominations = []
-        categories = Category.objects.filter(categories_in_EventCategoryModel__event=self.id)
-        for category in categories:
+        event_categories = EventCategory.objects.filter(event=self.id)
+        for event_category in event_categories:
+            nominations_members = []
             category_nominations = CategoryNomination.objects.filter(
-                event_category__category=category)
+                event_category__category=event_category.category)
             for category_nomination in category_nominations:
                 member_nominations = MemberNomination.objects.filter(
                     category_nomination=category_nomination
@@ -178,7 +178,7 @@ class Event(models.Model):
                 )
             win_nominations.append(
                 {
-                    'category': str(category.name),
+                    'category': str(event_category.category.name),
                     'nominations': nominations_members
                 }
             )

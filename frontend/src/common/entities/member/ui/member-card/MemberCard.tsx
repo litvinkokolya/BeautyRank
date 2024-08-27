@@ -64,8 +64,8 @@ export const MemberCard: FC<MemberCardProps> = ({ member }) => {
   return (
     <>
       {!isLoading ? (
-        <>
-          {!notPhotoMembers() && (
+        <ul>
+          {!notPhotoMembers() ? (
             <li className={styles.members__item} key={member.id}>
               <Link
                 href={memberLink()}
@@ -108,8 +108,8 @@ export const MemberCard: FC<MemberCardProps> = ({ member }) => {
                 </div>
               </Link>
             </li>
-          )}
-        </>
+          ) : <li>Нет фото</li>}
+        </ul>
       ) : (
         <Loader />
       )}

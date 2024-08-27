@@ -65,13 +65,13 @@ const UploadPhotoForm = () => {
                             }
                         />
                     </form>
-                    {/*<Link*/}
-                    {/*  target="_blank"*/}
-                    {/*  href={`${BEAUTY_RANK_BOT}${memberId}`}*/}
-                    {/*  className={styles.upload_photo__video_link}*/}
-                    {/*>*/}
-                    {/*  Загрузить Видео*/}
-                    {/*</Link>*/}
+                    <Link
+                      target="_blank"
+                      href={`${BEAUTY_RANK_BOT}${memberId}`}
+                      className={styles.upload_photo__video_link}
+                    >
+                      Загрузить Видео
+                    </Link>
                     <Button
                         disabled={buttonIsDisabled() || isLoading}
                         className={styles.upload_photo__btn}
