@@ -100,19 +100,29 @@ export const MembersList = () => {
             renderMemberCards(members!)
         ) : (
             <>
-              {!USER_IS_ORGANIZER && currentMasterMembers.length !== 0 && (
-                  <>
-                    <h3 className={styles.members__title}>Ваши работы:</h3>
-                    {renderMemberCards(currentMasterMembers)}
-                  </>
+              {!USER_IS_ORGANIZER && !isDone && (
+                <>
+                  {currentMasterMembers.length !== 0 ? (
+                    <>
+                      <h3 className={styles.members__title}>Ваши работы:</h3>
+                      {renderMemberCards(currentMasterMembers)}
+                    </>
+                  ) : (
+                    <h3 className={styles.members__title}>Вам еще не выдали номинации.</h3>
+                  )}
+                </>
               )}
-              {!USER_IS_ORGANIZER && (
-                  <h3 className={styles.members__title}>Работы других мастеров:</h3>
-              )}
-              {otherMasterMembers.length !== 0 ? (
-                  renderMemberCards(otherMasterMembers)
-              ) : (
-                  <BeautyLoader/>
+              {!USER_IS_ORGANIZER && isDone && (
+                <>
+                  {otherMasterMembers.length !== 0 ? (
+                    <>
+                      <h3 className={styles.members__title}>Оцененные (завершенные) работы:</h3>
+                      {renderMemberCards(otherMasterMembers)}
+                    </>
+                  ) : (
+                    <h3 className={styles.members__title}>Нет завершенных (оцененных) работ.</h3>
+                  )}
+                </>
               )}
             </>
         )}
