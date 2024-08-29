@@ -93,7 +93,7 @@ export const MembersList = () => {
   return (
       <>
         <div>
-          <label htmlFor='is_done'>Завершенные</label>
+          <label htmlFor='is_done'>Оцененные</label>
           <input type='checkbox' id='is_done' checked={isDone} onChange={() => setIsDone(!isDone)}/>
         </div>
         {USER_IS_STAFF ? (
@@ -101,22 +101,27 @@ export const MembersList = () => {
         ) : (
             <>
               {!USER_IS_ORGANIZER && !isDone && (
-                <>
+                  <>
                   {currentMasterMembers.length !== 0 ? (
-                    <>
-                      <h3 className={styles.members__title}>Ваши работы:</h3>
-                      {renderMemberCards(currentMasterMembers)}
-                    </>
+                      <>
+                        <h3 className={styles.members__title}>Ваши работы:</h3>
+                        {renderMemberCards(currentMasterMembers)}
+                      </>
                   ) : (
-                    <h3 className={styles.members__title}>Вам еще не выдали номинации.</h3>
+                      <>
+                        <br/>
+                        <h3 style={{ marginTop: '10px' }} className={styles.members__title}>Ваши работы оценены</h3>
+                        <h3 style={{ marginTop: '10px' }} className={styles.members__title}>Нажмите оцененные чтобы посмотреть</h3>
+                      </>
                   )}
-                </>
+                  </>
               )}
               {!USER_IS_ORGANIZER && isDone && (
                 <>
                   {otherMasterMembers.length !== 0 ? (
                     <>
-                      <h3 className={styles.members__title}>Оцененные (завершенные) работы:</h3>
+                      <h3 className={styles.members__title}>Оцененные работы:</h3>
+                      {renderMemberCards(currentMasterMembers)}
                       {renderMemberCards(otherMasterMembers)}
                     </>
                   ) : (
