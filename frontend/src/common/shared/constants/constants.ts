@@ -9,7 +9,7 @@ export const getUserRole = (role: string): boolean | undefined => {
 };
 
 export const getUserIsStaff = (): boolean | undefined => getUserRole('Судья');
-export const getUserIsMaster = (): boolean | undefined => getUserRole('Мастер');
+export const getUserIsMaster = (): boolean | undefined => getUserRole('Участник');
 export const getUserIsOrganizer = (): boolean | undefined =>
   getUserRole('Организатор');
 

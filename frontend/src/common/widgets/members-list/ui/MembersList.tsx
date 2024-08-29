@@ -100,6 +100,10 @@ export const MembersList = () => {
             renderMemberCards(members!)
         ) : (
             <>
+              {
+                USER_IS_ORGANIZER && (
+                    renderMemberCards(members!)
+              )}
               {!USER_IS_ORGANIZER && !isDone && (
                   <>
                   {currentMasterMembers.length !== 0 ? (
