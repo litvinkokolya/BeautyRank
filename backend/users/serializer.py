@@ -33,7 +33,7 @@ class LoginSerializer(serializers.Serializer):
                 return serializers.ValidationError(
                     detail="Номер телефона введен неверно!"
                 )
-        elif len(numbers) == 12 and numbers.startswith(("375", "380")):
+        elif len(numbers) == 12 and numbers.startswith(("375", "972", "996")):
             return numbers
         raise serializers.ValidationError(detail="Номер телефона введен неверно!")
 
