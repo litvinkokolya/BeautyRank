@@ -48,13 +48,13 @@ const UploadPhotoForm = () => {
                     <form className={styles.upload_photo__form}>
                         <UploadPhotoBox
                             title="ДО"
-                            photos={member?.nomination_info.after || []}
+                            photos={member?.nomination_info.before || []}
                             onChange={handleFileChange}
                             getImageSrc={getImageSrc}
                         />
                         <UploadPhotoBox
                             title="ПОСЛЕ"
-                            photos={member?.nomination_info.before || []}
+                            photos={member?.nomination_info.after || []}
                             onChange={(index) =>
                                 handleFileChange(
                                     index + (member?.nomination_info.after.length || 0)
