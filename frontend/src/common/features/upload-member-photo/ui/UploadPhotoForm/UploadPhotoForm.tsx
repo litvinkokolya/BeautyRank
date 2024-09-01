@@ -49,12 +49,6 @@ const UploadPhotoForm = () => {
                         <UploadPhotoBox
                             title="ДО"
                             photos={member?.nomination_info.before || []}
-                            onChange={handleFileChange}
-                            getImageSrc={getImageSrc}
-                        />
-                        <UploadPhotoBox
-                            title="ПОСЛЕ"
-                            photos={member?.nomination_info.after || []}
                             onChange={(index) =>
                                 handleFileChange(
                                     index + (member?.nomination_info.after.length || 0)
@@ -63,6 +57,12 @@ const UploadPhotoForm = () => {
                             getImageSrc={(index) =>
                                 getImageSrc(index + (member?.nomination_info.after.length || 0))
                             }
+                        />
+                        <UploadPhotoBox
+                            title="ПОСЛЕ"
+                            photos={member?.nomination_info.after || []}
+                            onChange={handleFileChange}
+                            getImageSrc={getImageSrc}
                         />
                     </form>
                     <Link
