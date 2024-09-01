@@ -23,7 +23,7 @@ export const useFileChange = ({
         : member?.nomination_info.before[
             index - member?.nomination_info.after.length
           ].name;
-      const beforeAfter = isAfter ? 'BE' : 'AF';
+      const beforeAfter = isAfter ? 'AF' : 'BE';
 
       setSelectedFiles((prevSelectedFiles) =>
         prevSelectedFiles.map((selectedFile, i) =>
