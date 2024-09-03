@@ -154,7 +154,7 @@ class EventViewSet(
     Показывает роль пользователя в этом мероприятии при запросе.
     """
 
-    queryset = Event.objects.all()
+    queryset = Event.objects.order_by('-id')
     serializer_class = EventSerializer
 
     def get_permissions(self):

@@ -17,9 +17,9 @@ export interface ICategoryNomination {
 export interface IChamp {
   id: number;
   name: string;
-  win_nominations: ICategoryNomination[];
-  role: string;
   image: string;
+  finished: boolean;
+  role: string;
 }
 
 export interface ChampCardProps {
