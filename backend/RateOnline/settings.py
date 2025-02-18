@@ -155,7 +155,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INTERNAL_IPS = ["127.0.0.1"]
 
-USE_S3 = os.getenv("USE_S3") == "True"
+USE_S3 = env("USE_S3", default=True)
 
 if USE_S3:
     # aws settings
@@ -188,6 +188,3 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
-
-USERS_WITHOUT_RESET_PASSWORD = ['375259660508', '996707170390', '972527558484', '77082847484',
-                                '79185723232', '375333755001', '375296961516', '358405199928']

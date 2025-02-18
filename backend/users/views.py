@@ -12,8 +12,6 @@ from users.smsc_api import send_sms
 from users.utils import generate_password
 from django.conf import settings
 
-from RateOnline.settings import USERS_WITHOUT_RESET_PASSWORD
-
 
 class UserViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
@@ -37,11 +35,11 @@ class UserViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
             if user.is_superuser:
                 return Response({"success": "Успешно!"})
             else:
-                if settings.USE_SMSC and phone_number not in USERS_WITHOUT_RESET_PASSWORD:
+                if settings.USE_SMSC:
                     random_number = generate_password()
                     send_sms(phone_number, random_number)
                 else:
-                    random_number = "0000"
+                    random_number = "0330"
                 user.set_password(random_number)
                 user.save()
                 return Response({"success": "Успешно!"})

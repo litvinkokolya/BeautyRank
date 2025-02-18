@@ -1,5 +1,5 @@
 from django.conf import settings
-from telebot import TeleBot
+from telebot import TeleBot, types
 
 
 class TelegramIntegration:
@@ -11,10 +11,12 @@ class TelegramIntegration:
         category = instance.category_nomination.event_category.category.name
         nomination = instance.category_nomination.nomination.name
 
-        message = self.telegram.send_video(
+        arr_file_ids = instance.url_video.split(', ')
+        media_files = [types.InputMediaPhoto(file_id) for file_id in arr_file_ids]
+
+        message = self.telegram.send_media_group(
             settings.TELEGRAM_CHAT_ID,
-            instance.url_video,
-            caption=f" Мероприятие - {event} \n{nomination} - {category}  \nНомер работы - {instance.id}",
+            media_files,
         )
         instance.url_message_video = f"https://t.me/BeautyRankVideo/{message.id}"
         instance.save()

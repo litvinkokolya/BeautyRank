@@ -120,19 +120,23 @@ export const MembersList = () => {
                   )}
                   </>
               )}
-              {!USER_IS_ORGANIZER && isDone && (
-                <>
-                  {otherMasterMembers.length !== 0 ? (
-                    <>
-                      <h3 className={styles.members__title}>Оцененные работы:</h3>
-                      {renderMemberCards(currentMasterMembers)}
-                      {renderMemberCards(otherMasterMembers)}
-                    </>
-                  ) : (
-                    <h3 className={styles.members__title}>Нет завершенных (оцененных) работ.</h3>
-                  )}
-                </>
-              )}
+                {!USER_IS_ORGANIZER && isDone && (
+                  <>
+                    {currentMasterMembers.length !== 0 && (
+                      <>
+                        {renderMemberCards(currentMasterMembers)}
+                      </>
+                    )}
+                    {otherMasterMembers.length !== 0 && (
+                      <>
+                        {renderMemberCards(otherMasterMembers)}
+                      </>
+                    )}
+                    {currentMasterMembers.length === 0 && otherMasterMembers.length === 0 && (
+                      <h3 className={styles.members__title}>Нет завершенных (оцененных) работ.</h3>
+                    )}
+                  </>
+                )}
             </>
         )}
         <div className={styles.pagination}>
