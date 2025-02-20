@@ -70,7 +70,7 @@ const UploadPhotoForm = () => {
                       href={`${BEAUTY_RANK_BOT}${memberId}`}
                       className={styles.upload_photo__video_link}
                     >
-                      Загрузить Видео
+                      Загрузить доп. фото
                     </Link>
                     <Button
                         disabled={buttonIsDisabled() || isLoading}

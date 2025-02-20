@@ -11,7 +11,7 @@ class TelegramIntegration:
         category = instance.category_nomination.event_category.category.name
         nomination = instance.category_nomination.nomination.name
 
-        arr_file_ids = instance.url_video.split(', ')
+        arr_file_ids = instance.url_video.split(',')
         media_files = [types.InputMediaPhoto(file_id) for file_id in arr_file_ids]
 
         message = self.telegram.send_media_group(
