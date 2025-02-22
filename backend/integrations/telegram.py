@@ -14,9 +14,11 @@ class TelegramIntegration:
         arr_file_ids = instance.url_video.split(',')
         media_files = [types.InputMediaPhoto(file_id) for file_id in arr_file_ids]
 
-        message = self.telegram.send_media_group(
+        media_files[0].caption=f" Мероприятие - {event} \n{nomination} - {category}  \nНомер работы - {instance.id}",
+
+        message_group = self.telegram.send_media_group(
             settings.TELEGRAM_CHAT_ID,
             media_files,
         )
-        instance.url_message_video = f"https://t.me/BeautyRankVideo/{message.id}"
+        instance.url_message_video = f"https://t.me/BeautyRankVideo/{message_group[0].message_id}"
         instance.save()
