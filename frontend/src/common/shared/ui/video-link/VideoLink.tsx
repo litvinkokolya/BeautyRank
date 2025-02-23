@@ -11,7 +11,7 @@ export const VideoLink = ({ member }: { member: IMember }) => {
           href={member?.url_message_video}
           className={styles.result__video_link}
         >
-          Посмотреть Видео Работы
+          Посмотреть доп. фото
         </Link>
       ) : null}
     </>
