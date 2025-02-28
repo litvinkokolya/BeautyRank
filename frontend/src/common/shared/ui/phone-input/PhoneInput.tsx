@@ -10,7 +10,7 @@ interface InputProps {
     value?: string;
 }
 
-const supportedCountries = ['ru', 'kg', 'by', 'il', 'fi'];
+const supportedCountries = ['ru', 'by', 'pl'];
 
 const PhoneInputBase: ForwardRefRenderFunction<
     HTMLInputElement,

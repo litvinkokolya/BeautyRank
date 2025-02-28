@@ -23,7 +23,7 @@ class LoginSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         numbers = "".join([str(i) for i in str(value) if i.isdigit()])
         if len(numbers) == 11:
-            if numbers.startswith("374"):
+            if numbers.startswith("48"):
                 return numbers
             if numbers[0] == "7":
                 return numbers
